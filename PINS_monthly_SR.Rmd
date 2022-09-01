@@ -1,0 +1,703 @@
+---
+title: "Planning Inspectorate statistical release"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(lubridate)
+library(dplyr)
+library(DT)
+
+# ==============================================================================
+# USER INPUTS:
+# ==============================================================================
+
+# date statistical release will be published
+publication_date <- "21/07/2022" # provide as string in format "dd/mm/yyyy"
+
+# set filepath to appeals data for update
+appeals_data <- "C:/Users/GerulaitisJoanna/OneDrive - Planning Inspectorate/Admin/Data_Analysis/to_june_2022_appeals.csv"
+
+# load PINS_monthly_SR_workings.R
+source("PINS_monthly_SR_workings.R")
+
+
+# ==============================================================================
+
+
+```
+
+
+## Introduction
+
+This statistical release provides summary information on appeals, which represent the highest volume (in terms of number of cases) of the work of the Planning Inspectorate.
+These statistics are produced each month and the focus is on timeliness, as that is an area in which stakeholders have an interest. Information on the decisions that have been made is also included; and on the number of Inspectors available to make those decisions.
+
+These statistics have been published to ensure everyone has equal access to the information and to support the Planning Inspectorate’s commitment to release information where possible.
+
+This statistical bulletin provides:
+
+* Appeals decisions and events held from `r start_m_y` to `r end_m_y`
+* The time taken to reach decisions
+* Number of open cases
+* Number of Inspectors
+
+### The Planning Inspectorate
+
+The Planning Inspectorate makes decisions and provides recommendations and advice on a range of land use planning-related issues across England. We do this in a fair, open, and timely way.
+
+The Planning Inspectorate deals with planning appeals, national infrastructure planning applications, examinations of local plans and other planning-related and specialist casework in England. The Planning Inspectorate is an executive agency, sponsored by the Department for Levelling Up, Housing and Communities, previously known as the Ministry for Housing, Communities and Local Government.
+
+### Summary
+
+**Time to decide cases**
+
+The median time to decide a case in `r end_m_y` was `r round_half_up(end_m_median_decision_time)` weeks. The median time to decide was around `r round_half_up(start_m_median_decision_time)` weeks during `r start_m_y`, and has been `r min_median_decision_time` weeks and over for the last 11 months.
+
+Median timeliness by procedure type is shown in the summary table below.
+
+`r datatable(time_to_decide_cases_latest_table, rownames = c(), options = list(dom = 't', columnDefs = list(list(className = 'dt-left', targets = 0:2))))`
+
+The median time for planning cases was at or above `r round_half_up(min_median_decision_time_planning)` weeks for each of the last 12 months; performance has ranged between `r round_half_up(min_median_decision_time_planning)` and `r round_half_up(max_median_decision_time_planning)` weeks over the past 12 months. Across the whole year, the median time to decision was `r round_half_up(median_decision_time_planning)` weeks.
+
+Enforcement decisions made in the last 12 months had a median decision time of `r round_half_up(median_decision_time_enforcement)` weeks.
+
+For `r ifelse(number_of_months_enforcement_longer_specialist == 12, "each", number_of_months_enforcement_longer_specialist) ` of the last 12 months Specialist cases have been decided more quickly than Enforcement cases.
+
+The median time for planning appeals decided by inquiry under the Rosewell Process over the 12 months to `r end_m_y` is `r decisions_inquiry_planning_rosewell_median` weeks. `r ifelse(decisions_inquiry_min_type$is_rosewell == 1 & decisions_inquiry_min_type$appeal_type_category == "Planning", "This is quicker than any other casework decided by inquiry.","")`
+
+### Decisions
+The Planning Inspectorate has made `r format(decisions_in_year, big.mark = ",", scientific = FALSE) ` appeal decisions in the last 12 months, an average of `r format(round_half_up(decisions_in_year/12), big.mark = ",", scientific = FALSE)` per month. The number of decisions in `r end_m_y` was `r format(decisions_in_latest_month, big.mark = ",", scientific = FALSE)`, the `r decisions_in_latest_month_rank_result[[as.character(decisions_in_latest_month_rank)]]` number of decisions over the past 12 months.
+
+There were `r format(decisions_count_written_latest_month, big.mark = ",", scientific = FALSE)` written representations decisions in `r end_m_y`; and `r  format(decisions_count_written_year, big.mark = ",", scientific = FALSE)` in the last 12 months. Pre-pandemic levels were approximately between 1,600 and 2,000 decisions per month. 
+
+There were `r  format(decisions_count_hearing_year, big.mark = ",", scientific = FALSE)` decisions made on hearings during the last 12 months, and during `r end_m_y`, `r format(decisions_count_hearing_latest_month, big.mark = ",", scientific = FALSE)` decisions were issued. Pre-pandemic levels for hearing decisions were between 50 and 100 decisions per month.
+
+There were `r format(decisions_count_inquiry_year, big.mark = ",", scientific = FALSE)` decisions made on inquiries during the last 12 months, with `r format(decisions_count_inquiry_latest_month, big.mark = ",", scientific = FALSE)` in `r end_m_y`. Decisions for inquiries since `r start_m_y` have ranged between `r decisions_count_inquiry_year_min` and `r decisions_count_inquiry_year_max`. Pre-pandemic levels for inquiry decisions were between 15 and 90 decisions per month.
+
+<!-- Planning Inspectors -->
+<!-- There were 371 Planning Inspectors employed by the Inspectorate in June 2022 with a full-time equivalent of 332. -->
+
+### Decisions, Events and Open Cases
+Planning Inspectorate has a new process and software in place for scheduling casework. Data on events is being obtained from a different source from April 22 onward and as a result statistics from that date onward can not be meaningfully compared with statistics before that date. Further, it is possible that current events data is incomplete as staff transition to this new admin system. We will review this each month going forward and make any revisions required in future editions of this publication.
+
+The number of decisions issued in `r end_m_y` was `r format(decisions_in_latest_month, big.mark = ",", scientific = FALSE)`; the `r decisions_in_latest_month_rank_result[[as.character(decisions_in_latest_month_rank)]]` number of decisions in the past 12 months.
+
+<!-- The number of events recorded for `r end_m_y` was X, the average number of events per month of the past 12 months was X. -->
+
+The median time to decide a case during `r end_m_y` was `r end_m_median_decision_time` weeks, `r month_change_decision_time_text` `r prev_m_y`. The median time to decide was around `r start_m_median_decision_time` weeks at the start of the reporting period, and has been between `r min_median_decision_time` weeks and `r max_median_decision_time` weeks over the past 11 months. 
+
+Figure 1: Number of events held, decisions issued and median time between valid date & decision date; `r start_m_y` to `r end_m_y`.
+
+<!-- "" -->
+Source: Horizon, Picaso, Inspector Scheduling System
+
+Note: The process and admin system used for events data has changed from April 2022
+
+<!-- Table 1: Number of events held, decisions issued and median time between valid date & decision date; July 2021 to June 2022. -->
+
+<!-- Note: This table includes revisions to previously published data. Please see Annex D for further information -->
+
+<!-- Month	Jul-21	Aug-21	Sep-21	Oct-21	Nov-21	Dec-21	Jan-22	Feb-22	Mar-22	Apr-22	May-22	Jun-22	Total -->
+<!-- Events Held	1,197	1,117	1,345	1,130	1,556	939	1,427	1,637	1,580	1,042	1,319	1,237	15,526 -->
+<!-- Decisions	1,303	1,211	1,545	1,236	1,555	1,483	1,365	1,666	1,913	1,257	1,414	1,198	17,146 -->
+<!-- Median	21.3	23.9	24.3	26.4	25.4	25.4	26.9	24.7	24.9	25.7	28.0	26.9	25.3 -->
+<!-- Source: Horizon, Picaso, Inspector Scheduling System. -->
+
+<!-- Over recent months PINS has transitioned to a new system for scheduling casework and changed the way that specialist casework records are kept, bringing them in line with other casetype records. This has resulted in approximately 200 extra cases being included in our open case counts from February 2022. -->
+
+<!-- Note – The number of cases closed is higher than the number of decisions, as it includes cases where an appeal is withdrawn, notice is withdrawn, or the appeal is turned away. -->
+
+<!-- Figure 2: Number of cases received, closed and open; July 2021 to June 2022 -->
+
+<!-- "" -->
+<!-- Source: Horizon and Picaso -->
+
+<!-- Note 1: there is a known anomaly that means that the number of open cases does not exactly follow the volumes of cases closed or received (for example the number of open cases can increase between months even though the number closed exceeded the number received). The main reasons for this have been identified and are detailed in the Background Quality Report. The inspectorate are Investigating how to introduce new processes to improve the quality of this data which once complete may result in revisions to the number of open cases. -->
+
+<!-- Note 2: Additional specialist casetypes are included in open case counts from February 2022 -->
+
+<!-- Note 3: This chart shows data that has been corrected since the previous release. See Annex D for more detail. -->
+
+<!-- Table 2: Number of cases received, closed and open; July 2021 to June 2022 -->
+
+<!-- Note 1: This table includes revisions to previously published data. Please see Annex D for further information -->
+
+<!-- Note 2: Additional specialist casetypes are included in open case counts from February 2022 -->
+
+<!-- Month	Jul-21	Aug-21	Sep-21	Oct-21	Nov-21	Dec-21	Jan-22	Feb-22	Mar-22	Apr-22	May-22	Jun-22	Total -->
+<!-- Received	1,774	1,785	1,824	1,763	1,943	1,755	1,706	1,714	1,824	1,635	1,962	1,715	21,400 -->
+<!-- Closed	1,491	1,356	1,731	1,422	1,780	1,684	1,545	1,881	2,161	1,428	1,646	1,404	19,529 -->
+<!-- Open All Cases	11894	12428	12475	12775	12913	13047	13242	13294	12976	13185	13503	13892	  -->
+<!-- Source: Horizon and Picaso -->
+
+<!-- Note: This table includes data that has been corrected since the previous release. See Annex D for more detail. -->
+
+<!-- ## 1.3 Number of Decisions -->
+<!-- The Planning Inspectorate has made 17,146 appeal decisions in the last 12 months. There were 1,198 cases decided in June 2022 which is less than the 12 month average of 1,429 per month. Table 3 below shows the monthly breakdown with fewer decisions for the months of July, August, October, April and June. -->
+
+<!-- Table 3: Appeal Decisions; July 2021 to June 2022 -->
+
+<!-- Month	Jul-21	Aug-21	Sep-21	Oct-21	Nov-21	Dec-21	Jan-22	Feb-22	Mar-22	Apr-22	May-22	Jun-22	Total -->
+<!-- Decisions	1,303	1,211	1,545	1,236	1,555	1,483	1,365	1,666	1,913	1,257	1,414	1,198	17,146 -->
+<!-- Source: Horizon and Picaso -->
+
+<!-- Figure 3 – Appeal Decisions; July 2021 to June 2022 -->
+
+<!-- "" -->
+<!-- Source: Horizon and Picaso -->
+
+<!-- Decisions by procedure and case type -->
+<!-- Planning Inspectors work on a broader range of work than the appeals featured in this Release. For example, they also work on examining Nationally Significant Infrastructure Project applications, Local Plans , Compulsory Purchase Order applications and many other specialist licencing/application types. -->
+
+<!-- Table 4 below gives the numbers of appeal decisions made broken down by whether the case was dealt with by written representations, hearings, or inquiries. -->
+
+<!-- The large majority of decisions over the past 12 months (16,042) were made on written representations. This is ninety four percent of all appeal decisions made. Table 4 shows that written representation decisions has varied from around 1,100 to over 1,800 per month over the past 12 months. (Pre-pandemic levels being between approximately 1,600 and 2,000 decisions per month). There were 1,112 decisions in June 2022. -->
+
+<!-- There were 637 decisions made on hearings during the last 12 months, the monthly average being 53. During June 2022 52 decisions were issued. Pre-pandemic levels for hearing decisions were between 50 and 100 decisions per month. In June 2022 34 decisions were made for inquiries. Decisions for inquiries since June 2021 have ranged between 18 and 60. Pre-pandemic levels for inquiry decisions were between 15 and 90 decisions per month. -->
+
+<!-- Table 4: Appeal Decisions by Procedure and Casework Category; July 2021 to June 2022 -->
+
+<!-- Month	Jul-21	Aug-21	Sep-21	Oct-21	Nov-21	Dec-21	Jan-22	Feb-22	Mar-22	Apr-22	May-22	Jun-22	Total -->
+<!-- Written Representations	1,201	1,104	1,475	1,186	1,457	1,398	1,250	1,594	1,816	1,158	1,291	1,112	16,042 -->
+<!-- Hearings	65	51	40	32	47	53	55	37	51	67	87	52	637 -->
+<!-- Inquiries	37	56	30	18	51	32	60	35	46	32	36	34	467 -->
+<!-- Total	1,303	1,211	1,545	1,236	1,555	1,483	1,365	1,666	1,913	1,257	1,414	1,198	17,146 -->
+<!-- Month	Jul-21	Aug-21	Sep-21	Oct-21	Nov-21	Dec-21	Jan-22	Feb-22	Mar-22	Apr-22	May-22	Jun-22	Total -->
+<!-- Planning	1,077	969	1,365	1,033	1,330	1,262	1,108	1,412	1,611	987	1,151	1,014	14,319 -->
+<!-- Enforcement	179	187	148	153	193	160	208	220	254	174	214	138	2,228 -->
+<!-- Specialist	47	55	32	50	32	61	49	34	48	96	49	46	599 -->
+<!-- Total	1,303	1,211	1,545	1,236	1,555	1,483	1,365	1,666	1,913	1,257	1,414	1,198	17,146 -->
+<!-- Source: Horizon and Picaso. -->
+
+<!-- What are Planning cases? The Planning category includes s78 planning appeals, householder appeals, commercial appeals, listed building consent appeals, advertisement appeals, s106 planning obligation appeals and Called In Planning Applications. -->
+
+<!-- What are Enforcement cases? Enforcement covers enforcement appeals (i.e., appeals against the issue of an enforcement notice by a local planning authority), enforcement listed building notice appeals and lawful development certificate appeals. -->
+
+<!-- What are Specialist cases? This category covers a wide range of different types of casework including Common Land, Environment, Purchase Notice, Rights of Way orders (including Schedule 14 cases), Tree Preservation Orders, Hedgerows and High Hedges cases. -->
+
+<!-- The large majority of cases decided in the past 12 months were planning (14,319). This is about eighty-four per cent of all appeal decisions made. There were 2,228 enforcement decisions and 599 specialist decisions. These totals are also shown in Table 4 above and Figure 4 below. -->
+
+<!-- Trends for planning decisions show similar patterns to written representations. The average number of enforcement decisions over the past 12 months was 186. March 22 had the most enforcement decisions of the last 12 months. Specialist casework figures continue to vary each month, from a low of 32 in September and November 2021 to a high of 96 in April 2022. The high number of cases decided in April was partly attributable to a large group of linked cases that were responded to at the same time. -->
+
+<!-- Figure 4 – Appeal Decisions by Procedure and Casework Category; July 2021 to June 2022 -->
+
+<!-- Appeals by Procedure -->
+
+<!-- "" -->
+<!-- Appeals by Casework Type -->
+
+<!-- "" -->
+<!-- Source: Horizon and Picaso -->
+
+<!-- ## 1.4 Decision timeliness -->
+<!-- It is important for people to know how long an appeal is going to take, so that they can make plans and decisions based on this information. This section covers the timeliness of decisions (i.e., how long it takes to make a decision) across appeal casework. In addition to an overall measure, timeliness is analysed by procedure type and casework category, as timeliness varies a great deal depending on these characteristics. -->
+
+<!-- Table 5 below shows that the median time to make a decision, across all cases in the last 12 months, was 25 weeks. Figure 5 shows the median has been above 21 weeks for the last 12 months. -->
+
+<!-- How is timeliness measured? -->
+
+<!-- The time to make a decision is measured from the time the Inspectorate have enough information for the case to proceed (it is deemed ‘valid’) to the time a decision letter is issued. A large majority of cases are ‘validated’ (the difference between the date the appeal is received, and the validation process being completed) in a week or less. -->
+
+<!-- The decisions made in a given month will include those that started many months before, and thus do not give an accurate indication of how long decisions submitted, or deemed ‘valid’ in that month, will take. -->
+
+<!-- Table 5 also shows the mean time for the last 12 months is 31 weeks. Each month the median is less than the mean, due to the relatively small number of very long cases. Also included in the table is the standard deviation of decision timeliness. The standard deviation – a measure of variation – varies throughout the year with no clear trend -->
+
+<!-- What are median, mean and standard deviation? -->
+
+<!-- Measure	Definition -->
+<!-- Mean	The total time taken divided by the number of cases. Also referred to as the ‘average’. A measure of how long each case would take, if the total time taken was spread evenly across all cases. -->
+<!-- Median	This is the time taken by the ‘middle’ case if all cases were sorted from quickest to longest -->
+<!-- Standard deviation	This is a measure of variability or spread. It is calculated by examining how much each value differs from the mean. A higher standard deviation means the individual decision times vary more widely around the mean. A lower standard deviation would demonstrate greater consistency in the Planning Inspectorate’s decision timeliness. -->
+<!-- Table 5: Median, mean and Standard Deviation of Time to Decision; July 2021 to June 2022 -->
+
+<!-- Month	Jul-21	Aug-21	Sep-21	Oct-21	Nov-21	Dec-21	Jan-22	Feb-22	Mar-22	Apr-22	May-22	Jun-22	Total -->
+<!-- Valid to Decision (median weeks)	21.3	23.9	24.3	26.4	25.4	25.4	26.9	24.7	24.9	25.7	28.0	26.9	25.3 -->
+<!-- Valid to Decision (mean weeks)	27.3	31.0	28.6	31.0	30.6	29.4	31.8	28.4	30.5	31.3	36.2	32.7	30.6 -->
+<!-- Standard Deviation (weeks)	18.5	23.3	16.7	19.0	21.3	17.7	22.0	17.6	23.9	24.8	31.2	25.1	22.1 -->
+<!-- Source: Horizon and Picaso -->
+
+<!-- Figure 5: Median and mean Time to Decision; July 2021 to June 2021 -->
+
+<!-- "" -->
+<!-- Source: Horizon and Picasso -->
+
+<!-- Procedure Type -->
+<!-- Table 6 below shows decision timeliness broken down by the procedure type. Hearings and inquires take longer than written representations – both types take more than twice as long on average across the last 12 months. Because 19 of every 20 cases are by written representation, the timeliness measures for written representations are similar to the measure across all cases. -->
+
+<!-- Where a small number of cases has been decided, the average timeliness (whether mean or median) is less meaningful as a measure than where there are many cases. Those noted in the table caption below should be treated with caution as there are fewer than 20 cases decided. -->
+
+<!-- Median times are less affected by large values than mean times, so are the focus of this commentary. The median time for written representations over the 12 months to June 2022 is 24 weeks; the last nine months have longer median time to decision than the previous three months. The median time for inquiries over the 12 months to May 2022 is 54 weeks. -->
+
+<!-- Table 6: Mean and Median Time to Decision, with Standard Deviation, by Procedure; July 2021 to June 2022 -->
+
+<!-- Note 1: where the number of decisions issued is fewer than 20, the measures mean, median and standard deviation are less meaningful. This applies to the number of inquiries in October 2021. -->
+
+<!-- Measure	Procedure	Jul-21	Aug-21	Sep-21	Oct-21	Nov-21	Dec-21	Jan-22	Feb-22	Mar-22	Apr-22	May-22	Jun-22	Total -->
+<!-- Valid to decision (median weeks)	Written Representations	20.4	23.0	23.6	25.9	24.4	24.9	25.4	24.1	24.2	24.4	27.0	26.1	24.3 -->
+<!-- Valid to decision (median weeks)	Hearings	43.6	43.9	50.4	53.6	47.9	53.1	64.1	45.7	52.9	108.3	94.0	59.1	55.7 -->
+<!-- Valid to decision (median weeks)	Inquiries	79.0	95.0	35.6	50.4	84.9	40.6	90.9	57.3	42.1	40.4	44.2	39.4	53.6 -->
+<!-- Valid to decision (median weeks)	All Cases	21.3	23.9	24.3	26.4	25.4	25.4	26.9	24.7	24.9	25.7	28.0	26.9	25.3 -->
+<!-- Valid to decision (mean weeks)	Written Representations	24.5	27.2	27.3	29.6	27.9	27.7	28.1	27.0	28.9	27.3	30.4	29.6	27.9 -->
+<!-- Valid to decision (mean weeks)	Hearings	50.0	49.8	57.1	57.2	60.8	61.2	75.7	57.5	60.6	89.1	113.6	87.4	71.9 -->
+<!-- Valid to decision (mean weeks)	Inquiries	77.5	87.7	56.5	77.6	82.3	47.3	69.4	60.7	60.7	57.2	55.8	49.8	66.8 -->
+<!-- Valid to decision (mean weeks)	All Cases	27.3	31.0	28.6	31.0	30.6	29.4	31.8	28.4	30.5	31.3	36.2	32.7	30.6 -->
+<!-- Standard Deviation (weeks)	Written Representations	13.3	16.0	14.0	16.4	15.5	15.0	15.3	15.1	21.9	17.2	18.3	17.1	16.6 -->
+<!-- Standard Deviation (weeks)	Hearings	19.8	27.5	27.5	22.9	38.6	32.0	43.8	33.1	27.3	38.3	59.8	62.7	45.4 -->
+<!-- Standard Deviation (weeks)	Inquiries	43.8	47.1	40.8	50.9	43.8	30.0	30.5	35.4	45.8	45.6	37.2	36.3	42.8 -->
+<!-- Standard Deviation (weeks)	All Cases	18.5	23.3	16.7	19.0	21.3	17.7	22.0	17.6	23.9	24.8	31.2	25.1	22.1 -->
+<!-- Decisions	Written Representations	1,201	1,104	1,475	1,186	1,457	1,398	1,250	1,594	1,816	1,158	1,291	1,112	16,042 -->
+<!-- Decisions	Hearings	65	51	40	32	47	53	55	37	51	67	87	52	637 -->
+<!-- Decisions	Inquiries	37	56	30	18	51	32	60	35	46	32	36	34	467 -->
+<!-- Decisions	Total	1,303	1,211	1,545	1,236	1,555	1,483	1,365	1,666	1,913	1,257	1,414	1,198	17,146 -->
+<!-- Source: Horizon and Picaso. -->
+
+<!-- The standard deviation information indicates that for all three procedures, there is considerable variation, meaning times are widely spread about the mean. For written representations, the amount of variation has been quite stable over recent months, whereas hearings and enquiries have experienced considerable month to month changes in the spread of decision times. -->
+
+<!-- Casework Category -->
+<!-- The nature of the cases the Planning Inspectorate deal with varies widely and several factors play a part in determining how long it takes to make a decision. One such factor is the type of casework. Table 7 below shows the time taken to decide, in planning cases, in enforcement cases, and in specialist cases, as does Figure 6. -->
+
+<!-- The median time to decision for planning cases (there are many more of these decisions than in the other categories) is lower than for enforcement cases; and less variable than the times for specialist cases. Table 7 and Figure 6 show the median time for planning cases was above 20 weeks for the last 12 months; and ranged between 23 and 27 weeks. Across the 12 month period, the median time to decision is 24 weeks for these cases. -->
+
+<!-- Table 7: Decisions, Mean, Median and Standard Deviation of Time to Decision – Planning, Enforcement, Specialist Cases; July 2021 to June 2022 -->
+
+<!-- Appeal Type	Measure	Jul-21	Aug-21	Sep-21	Oct-21	Nov-21	Dec-21	Jan-22	Feb-22	Mar-22	Apr-22	May-22	Jun-22	Total -->
+<!-- Planning Cases	Valid to decision (median wks)	20.4	23.0	23.6	25.3	24.6	24.6	25.2	24.2	23.6	25.0	27.0	26.0	24.3 -->
+<!-- Planning Cases	Valid to decision (mean wks)	24.4	26.2	26.9	28.3	27.2	26.8	28.1	26.3	25.8	26.7	30.3	29.1	27.1 -->
+<!-- Planning Cases	Standard deviation of decision (weeks)	13.7	14.7	13.5	13.6	14.1	13.7	16.2	13.9	15.1	15.3	21.6	17.8	15.4 -->
+<!-- Enforcement Cases	Valid to decision (median wks)	32.3	41.6	33.2	34.0	39.9	39.1	37.5	31.1	44.4	48.0	57.8	40.9	39.0 -->
+<!-- Enforcement Cases	Valid to decision (mean wks)	42.7	54.5	40.7	43.6	53.5	45.0	49.5	39.9	57.3	59.7	66.9	56.3	51.2 -->
+<!-- Enforcement Cases	Standard deviation of decision (weeks)	29.4	38.3	26.3	30.2	37.6	26.4	32.4	26.7	39.9	40.8	50.1	47.0	37.4 -->
+<!-- Specialist Cases	Valid to decision (median wks)	22.4	17.7	27.7	32.1	19.7	27.1	29.4	25.4	27.2	12.7	27.3	27.9	24.9 -->
+<!-- Specialist Cases	Valid to decision (mean wks)	33.6	34.4	46.8	48.9	36.4	40.8	41.6	40.5	46.7	27.4	40.4	40.4	38.7 -->
+<!-- Specialist Cases	Standard deviation of decision (weeks)	27.1	29.6	35.7	36.6	40.7	32.5	37.0	37.8	45.5	30.0	34.8	27.5	34.8 -->
+<!-- Source: Horizon and Picaso. -->
+
+<!-- Annex A gives information on median and mean time to decision, with standard deviation, for the three procedure types, split by planning, enforcement, and specialist casework categories. -->
+
+<!-- Enforcement decisions made in the last 12 months had a median decision time of 39 weeks. -->
+
+<!-- There are considerably fewer specialist cases which means results are more liable to be distorted by extreme values. Looking at the annual measures, the median time to decision for specialist decisions have been shorter than enforcement decisions, and similar to the median for planning decisions. Throughout the period shown, specialist cases have been decided quicker than enforcement. -->
+
+<!-- Figure 6 – Median Time to Decision by Casework Category: July 2021 to June 2022 -->
+
+<!-- "" -->
+<!-- Source: Horizon and Picaso -->
+
+<!-- Note that the Inspectorate publishes each month, information on the mean and median times from valid to decision, for selected appeal types. The information published also breaks down the time for each stage of the process. See Annex B for further details. -->
+
+<!-- Planning Inquiry Decisions -->
+<!-- For planning appeals decided by the inquiry process, The Planning Inspectorate has been implementing recommendations from the Rosewell review. -->
+
+<!-- The median time for inquiries under Rosewell process over the 12 months to June 2022 is 31 weeks and the median time to decision for May 2022 was 31 weeks. -->
+
+<!-- Table 8: Decisions, Mean and Median Time to Decision, Planning Inquiry Cases under Rosewell Process; July 2021 to June 2022 -->
+
+<!-- Note 1: where there are fewer than 20 decisions, the measures mean, median and standard deviation are less meaningful. -->
+
+<!-- Measure	Jul-21	Aug-21	Sep-21	Oct-21	Nov-21	Dec-21	Jan-22	Feb-22	Mar-22	Apr-22	May-22	Jun-22	Total -->
+<!-- Decisions	11	13	19	8	19	14	21	23	22	15	25	22	212 -->
+<!-- Median (weeks)	29.1	25.1	26.9	43.2	28.6	27.4	31.9	42.1	30.0	33.6	30.6	30.9	30.7 -->
+<!-- Mean (weeks)	32.0	39.6	30.5	40.0	36.8	29.2	37.8	47.0	35.5	36.0	40.0	31.6	36.6 -->
+<!-- St. Dev. (weeks)	 12.0	 44.5	 10.7	 13.5	 18.7	 8.5	 19.6	 19.7	 14.2	 13.3	 20.5	 11.4	 19.6 -->
+<!-- Source: Horizon -->
+
+<!-- Most inquiry decisions now being issued are under the revised ‘Rosewell’ process but some inquiries, for example those that are linked together with associated enforcement cases, do not follow the Rosewell process. -->
+
+<!-- Table 9: Decisions, Planning Inquiry Cases under non-Rosewell Process; July 2021 to June 2022 -->
+
+<!-- Month	Jul-21	Aug-21	Sep-21	Oct-21	Nov-21	Dec-21	Jan-22	Feb-22	Mar-22	Apr-22	May-22	Jun-22	Total -->
+<!-- Decisions	2	3	1	0	0	3	2	0	3	3	1	1	19 -->
+<!-- Source: Horizon -->
+
+<!-- Figure 7 below shows the mean and median time to decision for planning inquiry cases under the Rosewell process. -->
+
+<!-- Figure 7: Mean and Median Time to Decision, Rosewell Inquiry Process; July 2021 to June 2022 -->
+
+<!-- "" -->
+<!-- Source: Horizon -->
+
+<!-- ## 1.5 Open Cases -->
+<!-- At the end of June 2022, the Planning Inspectorate had almost thirteen thousand nine hundren open cases (13,892). This is higher than the previous month; the number of open cases has been rising through the year. More information on the number of open cases, and how it has changed over the past 12 months, is in Table 2 and Figure 2 above. -->
+
+<!-- The open cases comprised of 12,054 cases being handled through written representations; 984 through hearings; and 737 through inquiries. This is not the number of ‘live’ hearings and inquiries since it includes cases where the event (hearing or inquiry) has yet to start, as well as those where the event has finished but the decision has yet to be issued. -->
+
+<!-- For each procedure type, there are more cases with an event yet to start, than at any other stage in the process. Event refers to either a site visit, hearing, or inquiry. -->
+
+<!-- Stage	Written Representations	Hearings	Inquiries	Total -->
+<!-- Cases received but yet to be deemed valid	1,361	90	6	1,458 -->
+<!-- Cases deemed valid but yet to ‘start’	2,671	112	86	2,950 -->
+<!-- Case started but event (site visit/hearing/inquiry) has not yet happened	7,209	666	524	8,415 -->
+<!-- Event has happened/started  but decision not yet issued	813	116	121	1,069 -->
+<!-- Total	12,054	984	737	13,892 -->
+<!-- Source: Horizon -->
+
+<!-- Note there are 117 cases that have no procedure type recorded (see Background Quality Report for more detail) These are included in the total but excluded from the breakdown by procedure. -->
+
+<!-- Data note 1 - the count of open cases from December 2020 onwards has been revised to include some specialist casework types that were previously excluded: High Hedge (HH), Hedgerow (HGW) and Tree Preservation Order (TPO). -->
+
+<!-- Data note 2 – there is a known anomaly that means that the number of open cases does not exactly follow the volumes of cases closed or received (for example the number of open cases can increase between months even though the number closed exceeded the number received). The main reasons for this have been identified and are detailed in the Background Quality Report. The inspectorate are Investigating how to introduce new processes to improve the quality of this data which once complete may result in revisions to the number of open cases. -->
+
+<!-- 1.6 Inspectors -->
+<!-- Table 11 below shows the number of inspectors in the Planning Inspectorate in each month from July 2021 to June 2022 . This includes headcount (i.e. the number of different individuals) and full-time equivalents (FTE) where those working part time are counted in proportion with their contracted hours. There were 371 Planning Inspectors employed by the Inspectorate in June 2022 – with a full-time equivalent of 332. -->
+
+<!-- Table 11: Planning Inspectors – Headcount and FTE; July 2021 to June 2022 -->
+
+<!-- (at end of month) -->
+
+<!-- Month	Jul-21	Aug-21	Sep-21	Oct-21	Nov-21	Dec-21	Jan-22	Feb-22	Mar-22	Apr-22	May-22	Jun-22 -->
+<!-- Headcount	347	346	345	351	360	361	360	357	357	355	365	371 -->
+<!-- FTE	308.4	307.8	306.6	314.0	323.2	322.8	320.9	318.9	319.1	316.6	325.9	331.5 -->
+<!-- As above, Planning Inspectors work on a broader range of work than the appeals featured in this Release. Please note that data on Planning Inspectors is only applicable to salaried employees (it does not include fixed term contract Inspectors or non-salaried Inspectors). -->
+
+<!-- ## 1.7 Revisions to previous release -->
+<!-- Data in the previous statistical release may have changed between being published last month and what is shown this month. Where changes have occurred (the volume numbers have changed by more than five, or the timeliness measures have changed by greater than 0.5 weeks) the tables in this release give the most recent figures. Information about which tables this applies to, can be found in Annex D and the separate Background Quality Report. -->
+
+<!-- ## 1.8 Quarterly Statistics -->
+<!-- The Inspectorate has also published a series of tables of quarterly data. The quarterly statistics differ from the monthly statistical release. Some of the data published is on casework types that The Planning Inspectorate deals with, that are larger in scale but smaller in volume. The best examples of this are Nationally Significant Infrastructure Projects and Local Plans, where volumes never go into the hundreds, and the time between submission to report issue can be over a year. Other data breaks appeals down into more detail than in the monthly totals. This data has been published on a quarterly basis for many years as management information. -->
+
+<!-- Appeals against refusal of Planning Permission (Section 78 appeals) -->
+<!-- The largest volume of casework dealt with by the Planning Inspectorate are appeals against refusal of Planning Permission, which are made under section 78 of the Town and Country Planning Act 1990. The analysis below deals with just this casework type although figures for other casework types can be found in the published quarterly statistics. -->
+
+<!-- Number of appeals received compared to decisions issued. -->
+<!-- In the last twelve months, July 2021 to June 2022, there have been 10,934 Section 78 planning appeals (s78) received, compared to 10,804 for the period July 2020 to June 2021. -->
+
+<!-- In the last five complete financial years (April 2017 to March 2022) the highest level of quarterly receipts (3,684) occurred in October to December 2017 and the highest number of decisions (3,705) was in July to September 2019. Over the past year the average number of receipts per quarter was 2,734 and the average number of decisions per quarter was 2,172. -->
+
+<!-- The number of appeals received in the first quarter of 2022/23 (2,844) was 10.2% higher than the same period in 2021/22. Appeal receipts since the pandemic started average around 2,705 per quarter (April 20 to June 22). -->
+
+<!-- Figure 8: Number of s78 Planning appeals receipts and decision, 2017/18 to 2022/23, by quarter -->
+
+<!-- "" -->
+<!-- Source: Horizon & Picaso. Full published data in Tables 2.1 and Table 2.4. -->
+
+<!-- See Annex E, Table A, for full data table. -->
+
+<!-- The number of decisions being issued in the first quarter of 2022/23, April to June, was 11% less than the previous quarter and 12% less than the corresponding quarter last year. -->
+
+<!-- Appeals Allowed -->
+
+<!-- The percentage of Section 78 planning appeals that were allowed in the latest quarter was 29%, the same as the previous quarter. Over the past 4 quarters the percentage of appeals allowed has been 28% or 29% each quarter. -->
+
+<!-- The overall percentage allowed is heavily influenced by the number of written representations appeals allowed, as this procedure type contributes by far the greatest number of decisions each year. There has been slightly more variation in the percentage allowed for hearings and inquiries. See Figure 11 below for further details. -->
+
+<!-- Figure 9: S78 planning appeals, percentage allowed, 2017/18 to 2022/23, by quarter -->
+
+<!-- "" -->
+<!-- Source: Horizon & Picaso. Full published data in Table 2.4 s78 planning appeals decided. -->
+
+<!-- See Annex E, Table B, for full data table -->
+
+<!-- Figure 10: S78 planning appeals, percentage allowed by procedure type, 2017/18 to 2022/23, by quarter -->
+
+<!-- "" -->
+<!-- Source: Horizon & Picaso. Full published data in Table 2.4 s78 planning appeals decided. -->
+
+<!-- See Annex E, Table B, for full data table -->
+
+<!-- Figure 11: S78 planning appeals, number of appeals allowed, 2017/18 to 2022/23, by quarter -->
+
+
+<!-- Source: Horizon & Picaso. Full published data in Table 2.4 s78 planning appeals decided. -->
+
+<!-- See Annex E, Table C, for full data table -->
+
+<!-- ## 1.9 Annex A, Median and mean time for decision, with standard deviations, for planning, enforcement and specialist casework -->
+<!-- Planning -->
+
+<!-- Note: where there are fewer than 20 decisions, the measures mean, median and standard deviation are less meaningful: The number of decisions issued during, July, August, October, November and December 2021 and April 2022 were fewer than 20. -->
+
+<!-- Planning	Measure	Jul-21	Aug-21	Sep-21	Oct-21	Nov-21	Dec-21	Jan-22	Feb-22	Mar-22	Apr-22	May-22	Jun-22	Total -->
+<!-- Written Representations	Decisions	1,021	916	1,323	1,000	1,274	1,204	1,052	1,359	1,550	936	1,082	954	13,671 -->
+<!-- Written Representations	Median Average Weeks	19.7	22.4	23.1	25.0	24.1	24.2	24.6	23.9	23.1	24.3	26.4	25.3	23.9 -->
+<!-- Written Representations	Mean Average Weeks	23.3	25.2	26.2	27.5	26.3	25.8	26.4	25.4	25.0	25.2	27.6	27.6	25.9 -->
+<!-- Written Representations	Standard Deviation Weeks	11.3	12.0	12.3	12.7	12.0	11.5	12.4	12.5	14.3	12.3	13.7	14.5	12.8 -->
+<!-- Hearings	Decisions	43	37	22	25	37	41	33	30	36	33	43	37	417 -->
+<!-- Hearings	Median Average Weeks	42.0	37.4	50.4	54.3	45.9	49.4	55.9	43.6	48.8	52.7	61.4	51.1	48.9 -->
+<!-- Hearings	Mean Average Weeks	42.7	41.3	54.7	54.7	54.3	56.7	70.7	51.5	52.8	63.0	90.0	66.4	58.6 -->
+<!-- Hearings	Standard Deviation Weeks	16.5	18.6	24.0	20.6	34.1	29.7	39.0	27.0	20.0	34.7	58.4	41.6	36.0 -->
+<!-- Inquiries	Decisions	13	16	20	8	19	17	23	23	25	18	26	23	231 -->
+<!-- Inquiries	Median Average Weeks	30.9	30.0	27.9	43.2	28.6	23.9	31.9	42.1	28.0	34.8	32.1	31.0	31.1 -->
+<!-- Inquiries	Mean Average Weeks	53.5	50.3	36.6	40.0	36.8	29.1	41.0	47.0	35.6	37.7	43.6	33.2	40.0 -->
+<!-- Inquiries	Standard Deviation Weeks	51.6	53.9	28.8	13.5	18.7	10.5	25.4	19.7	15.1	13.4	27.0	13.4	27.4 -->
+<!-- All Cases	Decisions	1,077	969	1,365	1,033	1,330	1,262	1,108	1,412	1,611	987	1,151	1,014	14,319 -->
+<!-- All Cases	Median Average Weeks	24.4	26.2	26.9	28.3	27.2	26.8	28.1	26.3	25.8	26.7	30.3	29.1	27.1 -->
+<!-- All Cases	Mean Average Weeks	20.4	23.0	23.6	25.3	24.6	24.6	25.2	24.2	23.6	25.0	27.0	26.0	24.3 -->
+<!-- All Cases	Standard Deviation Weeks	13.7	14.7	13.5	13.6	14.1	13.7	16.2	13.9	15.1	15.3	21.6	17.8	15.4 -->
+<!-- The median time to decision for planning written representations was 1.1 weeks lower in June 2022 compared to May 2022. -->
+<!-- The standard deviation of time to decision for planning written representations has varied between 11.3 weeks and 14.3 weeks over the past 12 months. -->
+<!-- The median for planning hearings during June 2022 reduced by 10.3 weeks compared to May 2022 -->
+<!-- The median for planning inquiries during June 2022 reduced by 1.2 weeks compared to May 2022 -->
+<!-- Enforcement -->
+
+<!-- Note: where there are fewer than 20 decisions, the measures mean, median and standard deviation are less meaningful. This applies to hearing decisions in all months other than July 2021 and April and May 2022; and to inquiry decisions in all months other than July, August and November 2021, and January 2022. -->
+
+<!-- Enforcement	Measure	Jul-21	Aug-21	Sep-21	Oct-21	Nov-21	Dec-21	Jan-22	Feb-22	Mar-22	Apr-22	May-22	Jun-22	Total -->
+<!-- Written Representations	Decisions	137	139	122	139	156	137	155	203	226	131	166	119	1,830 -->
+<!-- Written Representations	Median Average Weeks	26.0	35.4	28.1	32.7	31.6	37.4	31.7	28.6	42.4	36.7	45.8	37.3	33.0 -->
+<!-- Written Representations	Mean Average Weeks	32.2	40.0	33.8	38.7	42.1	41.5	37.2	36.6	54.8	44.8	47.9	43.1	41.7 -->
+<!-- Written Representations	Standard Deviation Weeks	19.6	25.8	16.8	22.4	28.2	23.9	22.1	21.9	38.9	29.1	28.8	24.2	27.3 -->
+<!-- Hearings	Decisions	22	11	18	7	9	10	19	6	11	31	41	11	196 -->
+<!-- Hearings	Median Average Weeks	67.3	56.0	50.8	53.0	55.3	60.5	66.7	55.7	63.0	118.9	170.3	223.7	87.4 -->
+<!-- Hearings	Mean Average Weeks	64.1	70.7	60.0	66.1	82.7	71.6	81.8	72.3	64.9	111.8	140.5	165.3	96.6 -->
+<!-- Hearings	Standard Deviation Weeks	17.9	34.2	31.1	27.9	46.6	33.7	47.4	36.3	22.5	19.0	50.7	70.8	51.9 -->
+<!-- Inquiries	Decisions	20	37	8	7	28	13	34	11	17	12	7	8	202 -->
+<!-- Inquiries	Median Average Weeks	90.6	104.1	101.6	117.6	107.6	60.9	87.3	84.0	86.0	88.5	86.7	103.3	93.8 -->
+<!-- Inquiries	Mean Average Weeks	92.9	122.3	94.5	147.4	118.3	48.0	90.9	71.9	58.3	49.3	78.0	96.1	90.9 -->
+<!-- Inquiries	Standard Deviation Weeks	35.0	34.9	32.0	52.2	26.8	27.1	15.4	44.0	48.0	60.7	37.2	35.9	38.0 -->
+<!-- All Cases	Decisions	179	187	148	153	193	160	208	220	254	174	214	138	2,228 -->
+<!-- All Cases	Median Average Weeks	32.3	41.6	33.2	34.0	39.9	39.1	37.5	31.1	44.4	48.0	57.8	40.9	39.0 -->
+<!-- All Cases	Mean Average Weeks	42.7	54.5	40.7	43.6	53.5	45.0	49.5	39.9	57.3	59.7	66.9	56.3	51.2 -->
+<!-- All Cases	Standard Deviation Weeks	29.4	38.3	26.3	30.2	37.6	26.4	32.4	26.7	39.9	40.8	50.1	47.0	37.4 -->
+<!-- The mean and median measures for enforcement written representation decisions show considerable variation month to month but no clear trend. The median for June 2022 reduced by 8.5 weeks compared to May 2022. -->
+<!-- The time to decision for enforcement hearings and inquiries is generally more than twice the time for written representation decisions. The median for hearings during June was 223 weeks due to a linked redetermined case. -->
+<!-- Enforcement hearings show variable trends for all three measures; mean, median and standard deviation. There are smaller numbers of decisions for this casework / procedure group that can influence these measures. -->
+<!-- Enforcement inquiries are generally taking longer than they were a year ago. Also, this grouping can be disproportionately affected by cases that involve multiple linked appeals (for example multiple people served an enforcement notice by a local authority appeal to The Planning Inspectorate, each person appealing is treated as a separate appeal, but all appeals are decided in one decision letter by one Inspector). -->
+<!-- Specialist -->
+
+<!-- Note: where there are fewer than 20 decisions, the measures mean, median and standard deviation are less meaningful. This applies to all months’ hearings decisions; and all months’ inquiries decisions. -->
+
+<!-- Note 2: This table includes revisions to previously published data. Please see Annex E for further information -->
+
+<!-- Specialist	Measure	Jul-21	Aug-21	Sep-21	Oct-21	Nov-21	Dec-21	Jan-22	Feb-22	Mar-22	Apr-22	May-22	Jun-22	Total -->
+<!-- Written Representations	Decisions	43	49	30	47	27	57	43	32	40	91	43	39	541 -->
+<!-- Written Representations	Median Average Weeks	21.0	17.3	24.3	30.4	17.3	24.9	29.0	23.9	24.1	11.3	23.3	25.1	22.3 -->
+<!-- Written Representations	Mean Average Weeks	28.3	28.6	44.9	46.6	21.3	36.1	35.0	34.4	32.4	23.2	33.5	37.8	32.7 -->
+<!-- Written Representations	Standard Deviation Weeks	21.7	24.7	36.1	35.5	14.7	27.5	30.1	30.1	29.8	22.1	27.8	27.3	28.3 -->
+<!-- Hearings	Decisions	0	3	0	0	1	2	3	1	4	3	3	4	24 -->
+<!-- Hearings	Median Average Weeks	-	95.0	-	-	101.9	101.9	130.1	149.1	127.9	141.0	90.9	75.1	103.8 -->
+<!-- Hearings	Mean Average Weeks	0.0	78.3	-	-	101.9	101.9	93.2	149.1	118.7	141.5	85.7	68.0	99.9 -->
+<!-- Hearings	Standard Deviation Weeks	-	31.5	-	-	0.0	26.2	58.0	0.0	22.9	15.4	29.0	14.7	38.7 -->
+<!-- Inquiries	Decisions	4	3	2	3	4	2	3	1	4	2	3	3	34 -->
+<!-- Inquiries	Median Average Weeks	94.3	88.4	75.2	105.3	113.4	113.9	95.1	119.7	109.4	44.8	66.9	39.7	86.6 -->
+<!-- Inquiries	Mean Average Weeks	90.2	84.6	75.2	84.7	121.7	113.9	84.0	119.7	110.0	44.8	89.4	34.9	88.5 -->
+<!-- Inquiries	Standard Deviation Weeks	9.6	11.5	8.2	33.7	43.4	15.6	29.6	0.0	61.3	1.6	49.0	13.2	41.7 -->
+<!-- All Cases	Decisions	47	55	32	50	32	61	49	34	48	96	49	46	599 -->
+<!-- All Cases	Median Average Weeks	22.4	17.7	27.7	32.1	19.7	27.1	29.4	25.4	27.2	12.7	27.3	27.9	24.9 -->
+<!-- All Cases	Mean Average Weeks	33.6	34.4	46.8	48.9	36.4	40.8	41.6	40.5	46.7	27.4	40.4	40.4	38.7 -->
+<!-- All Cases	Standard Deviation Weeks	27.1	29.6	35.7	36.6	40.7	32.5	37.0	37.8	45.5	30.0	34.8	27.5	34.8 -->
+<!-- The number of decisions for Specialist cases is low (see Table 4), and this makes it less easy to identify trends for Specialist cases decided by hearings and inquiries. -->
+<!-- The highest volume of decisions is against Written Representations, and over the last 12 months the volume and time measures see variable trends. -->
+<!-- The time to decision for specialist hearings and inquiries is generally more than twice the time for written representation decisions. -->
+<!-- The median for time to specialist written representation decision varies between 11 weeks (April 22) and 30 weeks (October 21). -->
+<!-- 1.10 Annex B - Detailed information on timeliness (June 2022) -->
+<!-- The information below is published today on the number and length of decisions made in June 2022 : -->
+
+<!-- Note: when there are fewer than 20 decisions the measures mean, median and standard deviation are less meaningful. This applies to the 11 appeals decided by Hearings and8 decided by Inquiry. -->
+
+<!-- Procedure Type	Median (weeks)	Mean (weeks)	Decisions -->
+<!-- Written Representations	28.0	30.6	627 -->
+<!-- Hearings	51.1	67.2	35 -->
+<!-- Inquiries	31.1	33.3	20 -->
+<!-- Written Representations	16.5	20.3	258 -->
+<!-- Written Representations	37.3	43.1	119 -->
+<!-- Hearings	223.7	165.3	11 -->
+<!-- Inquiries	96.1	103.3	8 -->
+<!-- The smaller the number of decisions, the less helpful the mean and median are as measures for summarising performance. Particular care should be taken when there are fewer than twenty decisions. These are shaded grey in the table but have been provided for completeness and transparency. -->
+
+<!-- The information published below shows the time taken for different stages of the appeals process: -->
+
+<!-- Note: when there are fewer than 20 decisions the measures mean, median and standard deviation are less meaningful. -->
+
+<!-- Measure	s78 Written Representations [Note 1]	s78 Hearings	s78 Inquiries	Householder appeals -->
+<!-- Weeks between valid date & start date	 	 	 	  -->
+<!-- Median (average)	11.7	14.3	2.3	2.3 -->
+<!-- Mean (average)	11.5	19.2	3.5	3.7 -->
+<!-- Cases that started in June 2022	715	70	29	385 -->
+<!-- Weeks between start date & event date	 	 	 	  -->
+<!-- Median (average)	11.7	14.6	16.0	9.9 -->
+<!-- Mean (average)	14.1	28.2	20.4	11.5 -->
+<!-- Cases where an event occurred during June 2022	597	37	19	337 -->
+<!-- Weeks between event date & decision date	 	 	 	  -->
+<!-- Median (average)	4.0	5.1	11.1	3.4 -->
+<!-- Mean (average)	5.1	7.4	12.4	3.9 -->
+<!-- Cases that have been decided in June 2022	576	31	18	254 -->
+<!-- Explanation of date terminology -->
+
+<!-- ### Date	Explanation	 -->
+<!-- Valid date	When a case is deemed to have been validly received.  Note – this is not always the date the case was validated. If a case is validated after the date it was validly received, it is the date it was validly received that is the valid date.	  -->
+<!-- Start date	When a timetable, on how the appeal will progress, is issued to both the appellant and local authority. This timetable tells the appellant when to submit the information the Inspectors need to determine the appeal. It also tells the local authority when to notify interested parties about the appeal.	  -->
+<!-- Event date	When the site visit, hearing, or inquiry occurred.	  -->
+<!-- Decision date	When the decision was issued by The Planning Inspectorate.	  -->
+<!-- Find out more about the process here - https://www.gov.uk/appeal-planning-decision/after-you-appeal -->
+
+<!-- ## 1.11 Annex C - Casework types included in this release -->
+<!-- Planning covers s78 planning appeals, Householder appeals, Commercial appeals, s20 Listed Building appeals, Advertisement appeals, s106 Planning Obligation appeals and Called In Planning Applications. -->
+
+<!-- Enforcement covers s174 Enforcement appeals, s39 Enforcement Listed Building appeals and Lawful Development Certificate appeals. -->
+
+<!-- Specialist casework includes Common Land, Rights of Way orders (including Schedule 14 cases), Purchase orders, Tree Preservation Orders, High Hedges appeals, Hedgerow appeals, Wayleave, Compulsory Purchase Orders, Secretary of State,Transport, Environmental Permitting Appeals and Coastal Access. Additional casework types have been added to this category over time. -->
+
+<!-- ## 1.12 Annex D - Revisions to the data tables -->
+<!-- This Annex lists all revisions made to the data since the last statistical release. -->
+
+<!-- Note: Classed as a revision are any values which have changed by more than five (when measuring number of decisions/ cases) or more than 0.5 weeks (for mean, median or standard deviation of weeks). -->
+
+<!-- Table	Revisions -->
+<!-- Table 1	Events held May 2022 -->
+<!-- Table 2	Received Cases May 2022; -->
+<!-- Table 2	Closed Cases December 2021 and February 2022; -->
+<!-- Table 2	Open Cases December 2021. -->
+<!-- Two errors have been identified and corrected since the last release of these Official Statistics, one affecting May’s received cases count and one affecting open cases counts throughout the series. -->
+
+<!-- In the process of compiling these statistics a data processing error was identified in the previous month’s production process which resulted in 147 received cases not being counted. This has now been corrected and an additional quality assurance check has been put in place to reduce the likelihood of such an error occurring in the future. -->
+
+<!-- The Planning Inspectorate are making efforts to improve our data quality. In reviewing the transition of data from legacy systems we recently identified 77 duplicate cases that were being counted in our open case figures. These have now been removed, reducing the number of open cases reported for every month of the series in this bulletin. -->
+
+<!-- ## 1.13 Annex E Quarterly Tables -->
+<!-- Table A: s78 planning appeals received and decided, by quarter since 2016/17 -->
+
+<!-- Year	Quarter	Received	Decided -->
+<!-- 2016/17	Apr - Jun	2,929	2,958 -->
+<!-- 2016/17	Jul - Sep	2,895	3,056 -->
+<!-- 2016/17	Oct - Dec	2,997	2,683 -->
+<!-- 2016/17	Jan - Mar	2,972	2,796 -->
+<!-- 2017/18	Apr - Jun	3,108	2,600 -->
+<!-- 2017/18	Jul - Sep	3,131	2,680 -->
+<!-- 2017/18	Oct - Dec	3,684	2,727 -->
+<!-- 2017/18	Jan - Mar	3,436	2,731 -->
+<!-- 2018/19	Apr - Jun	3,104	2,428 -->
+<!-- 2018/19	Jul - Sep	3,192	2,431 -->
+<!-- 2018/19	Oct - Dec	3,074	2,740 -->
+<!-- 2018/19	Jan - Mar	2,867	2,665 -->
+<!-- 2019/20	Apr - Jun	3,203	3,540 -->
+<!-- 2019/20	Jul - Sep	2,849	3,705 -->
+<!-- 2019/20	Oct - Dec	2,771	3,350 -->
+<!-- 2019/20	Jan - Mar	2,894	2,759 -->
+<!-- 2020/21	Apr - Jun	2,610	1,514 -->
+<!-- 2020/21	Jul - Sep	2,613	2,252 -->
+<!-- 2020/21	Oct - Dec	2,779	2,879 -->
+<!-- 2020/21	Jan - Mar	2,831	2,467 -->
+<!-- 2021/22	Apr - Jun	2,581	2,322 -->
+<!-- 2021/22	Jul - Sep	2,690	2,125 -->
+<!-- 2021/22	Oct - Dec	2,730	2,212 -->
+<!-- 2021/22	Jan - Mar	2,670	2,304 -->
+<!-- 2022/23	Apr - Jun	2,844	2,048 -->
+<!-- Table B: s78 planning appeals, percentage allowed by procedure type from 2016/17 -->
+
+<!-- Year	Quarter	Written Representations	Hearings	Inquiries	All -->
+<!-- 2016/17	Apr - Jun	31%	45%	56%	32% -->
+<!-- 2016/17	Jul - Sep	32%	35%	60%	32% -->
+<!-- 2016/17	Oct - Dec	33%	38%	54%	34% -->
+<!-- 2016/17	Jan - Mar	31%	44%	54%	33% -->
+<!-- 2017/18	Apr - Jun	29%	41%	51%	30% -->
+<!-- 2017/18	Jul - Sep	30%	41%	52%	31% -->
+<!-- 2017/18	Oct - Dec	31%	46%	43%	32% -->
+<!-- 2017/18	Jan - Mar	32%	48%	36%	33% -->
+<!-- 2018/19	Apr - Jun	30%	48%	51%	32% -->
+<!-- 2018/19	Jul - Sep	30%	48%	45%	32% -->
+<!-- 2018/19	Oct - Dec	26%	33%	51%	27% -->
+<!-- 2018/19	Jan - Mar	28%	36%	38%	29% -->
+<!-- 2019/20	Apr - Jun	26%	51%	52%	27% -->
+<!-- 2019/20	Jul - Sep	23%	37%	42%	24% -->
+<!-- 2019/20	Oct - Dec	22%	42%	43%	23% -->
+<!-- 2019/20	Jan - Mar	22%	47%	48%	24% -->
+<!-- 2020/21	Apr - Jun	21%	37%	25%	21% -->
+<!-- 2020/21	Jul - Sep	24%	41%	55%	25% -->
+<!-- 2020/21	Oct - Dec	25%	37%	58%	26% -->
+<!-- 2020/21	Jan - Mar	25%	35%	53%	26% -->
+<!-- 2021/22	Apr - Jun	30%	34%	55%	31% -->
+<!-- 2021/22	Jul - Sep	27%	42%	58%	28% -->
+<!-- 2021/22	Oct - Dec	27%	41%	62%	28% -->
+<!-- 2021/22	Jan - Mar	28%	32%	53%	29% -->
+<!-- 2022/23	Apr - Jun	27%	35%	54%	29% -->
+<!-- Table C: s78 planning appeals, number allowed by procedure type from 2016/17. -->
+
+<!-- Year or Quarter	Quarter	Written Representations	Hearings	Inquries	All -->
+<!-- 2016/17	Apr - Jun	822	88	45	955 -->
+<!-- 2016/17	Jul - Sep	885	58	50	993 -->
+<!-- 2016/17	Oct - Dec	802	63	35	900 -->
+<!-- 2016/17	Jan - Mar	803	71	35	909 -->
+<!-- 2017/18	Apr - Jun	701	56	35	792 -->
+<!-- 2017/18	Jul - Sep	732	61	41	834 -->
+<!-- 2017/18	Oct - Dec	768	72	23	863 -->
+<!-- 2017/18	Jan - Mar	811	65	33	909 -->
+<!-- 2018/19	Apr - Jun	679	62	29	770 -->
+<!-- 2018/19	Jul - Sep	683	63	23	769 -->
+<!-- 2018/19	Oct - Dec	666	44	24	734 -->
+<!-- 2018/19	Jan - Mar	702	38	21	761 -->
+<!-- 2019/20	Apr - Jun	877	62	31	970 -->
+<!-- 2019/20	Jul - Sep	805	55	24	884 -->
+<!-- 2019/20	Oct - Dec	684	67	27	778 -->
+<!-- 2019/20	Jan - Mar	541	87	32	660 -->
+<!-- 2020/21	Apr - Jun	304	19	2	325 -->
+<!-- 2020/21	Jul - Sep	537	17	6	560 -->
+<!-- 2020/21	Oct - Dec	695	38	22	755 -->
+<!-- 2020/21	Jan - Mar	588	39	16	643 -->
+<!-- 2021/22	Apr - Jun	633	40	39	712 -->
+<!-- 2021/22	Jul - Sep	536	40	29	605 -->
+<!-- 2021/22	Oct - Dec	553	41	24	618 -->
+<!-- 2021/22	Jan - Mar	599	31	36	666 -->
+<!-- 2022/23	Apr - Jun	513	39	33	585 -->
+<!-- 1.14 Background Notes -->
+<!-- Data sources -->
+<!-- Horizon / Picaso – The main casework management systems used for processing appeals casework (note that Picaso is no longer a live system). SAP HR – The Human Resources system database used to store all information regarding members of staff. -->
+
+<!-- Compliance with the Code of Practice for Statistics -->
+<!-- These statistics have been published in accordance with the Code of Practice for Statistics, which cover trustworthiness, quality, and value. They have been pre-announced, and publication is overseen by the Head of Profession. -->
+
+<!-- ## 1.15 Technical Notes -->
+<!-- A Background Quality Report is published alongside this Statistical Release. It provides more detail on the quality of statistics in this publication -->
+
+<!-- Term	Explanation -->
+<!-- Data quality	Data on cases is taken from a live casework system, and details of cases can change for a number of reasons even after a decision has been made. We are seeking to get a better understanding of the nature and volume of these changes and will provide further information as it is available. -->
+<!-- Data quality	We carry out regular checks on the quality of our data and may undertake ad hoc data cleansing exercises.  Therefore, all the data for the last 12 rolling months is published in provisional form. -->
+<!-- Data quality	We have indicated in this publication any data where a number of cases has changed by more than five cases in a month; or where a measure (mean, median or standard deviation) has changed by more than 0.5 weeks. -->
+<!-- Measuring weeks	Data are measured in days and then converted to weeks. -->
+<!-- Measuring weeks	Note that not all decimal values are possible where converting days to weeks. 1 day is 1/7 of a week, or 0.14 weeks (to two decimal places). 2 days = 0.29; 3 days = 0.43; 4 days = 0.57; 5 days = 0.71; 6 days = 0.86. -->
+<!-- Measuring weeks	When these are used to calculate averages, or displayed to one decimal place, the result will not equate to a full day which can be misleading: it may appear that we are measuring part days (e.g. 19.8 weeks) but we only measure in whole days. -->
+
+<!-- ## 1.16 Glossary -->
+<!-- Term	Explanation -->
+<!-- Appeals	The right to appeal a planning decision made by a local authority is a key feature of the planning system, as is appealing when an authority is taking too long. -->
+<!-- Appeals decided	Number of appeals by the date the appeal was decided by The Planning Inspectorate. -->
+<!-- Appeals received	Number of appeals by the date the appeal was received by The Planning Inspectorate. -->
+<!-- Applications	Planning Inspectorate manage the application process for proposed Nationally Significant Infrastructure Projects (NSIPs) within England and Wales in line with the 2008 Planning Act. -->
+<!-- Closed	The total number of appeals decided, withdrawn, or turned away. -->
+<!-- Decision	The outcome of the case e.g. appeal allowed or rejected. The date of the decision is taken as the date a decision letter is sent to the appellant. -->
+<!-- Event	A site visit, hearing, or inquiry (may be virtual) -->
+<!-- Event Type	The different options of how an Inspector visits a site for a written representations appeal. -->
+<!-- Examinations	The process of examining local plans is dealt with by the Planning Inspectorate. Every Local Planning Authority is required to have a local plan.  This includes a vision for the future and plan to address housing needs in the area. -->
+<!-- Examinations	When a Local Planning Authority has finished preparing and consulting on a local plan it must be submitted to the Secretary of State who appoints an Inspector to carry out an independent examination. -->
+<!-- FTE	Full Time Equivalent – a count of employees where those working part time are counted in proportion with their contracted hours. -->
+<!-- Headcount	Total number of staff employed regardless of how many hours they work (i.e. the number of different individuals). -->
+<!-- Hearings	A hearing involves the submission of written evidence by the main parties and a hearing once all the written submissions have been received. -->
+<!-- Hearings	This takes the form of a round-the-table discussion (in person or virtually) that will be led by the planning inspector. It allows for all parties to respond to any questions that the inspector might have, and to let everyone make their case known. -->
+<!-- Hearings	Source: Planning Portal -->
+<!-- Inquiries	An inquiry is usually used for complex cases where legal issues may need to be considered. The main parties will usually have legal representatives to present their case and to cross-examine any witnesses. Prior to the inquiry date, the Planning Inspectorate will expect to have received various documents from all parties that will be taking part in the appeal. These may include statements of case and proofs of evidence from expert witnesses. Third parties may also take part. The inquiry will be led by the inspector and will follow a formal procedure. -->
+<!-- Inquiries	At some point during or on conclusion of the inquiry the inspector and the main parties will undertake a site visit. -->
+<!-- Inquiries	Source: Planning Portal -->
+<!-- Live appeals	Number of live appeals in that have an appeal valid date but no end date (either decision date or a closed date, e.g. for appeals that have been withdrawn). -->
+<!-- Mean	The total time taken divided by the number of cases. Also referred to as the ‘average’. A measure of how long each case would take, if the total time taken was spread evenly across all cases. -->
+<!-- Median	This is the time taken by the ‘middle’ case if all cases were sorted from quickest to longest -->
+<!-- Open Cases	Number of cases that have been received but on which a decision has not yet been made/ issued. Will differ from Live Appeals as it includes those received but not yet verified. -->
+<!-- Procedure Type	The method by which The Planning Inspectorate processes and decides appeals. -->
+<!-- Standard deviation	This is a measure of variability or spread. It is calculated by examining how much each value differs from the mean. A higher standard deviation means the individual decision times vary more widely around the mean. -->
+<!-- Written Representations	Most planning appeals are decided by the written representations’ procedure. With this procedure the Inspector considers written evidence from the appellant, the LPA and anyone else who has an interest in the appeal. The site is also likely to be visited. -->
+
+<!-- ## 1.17 Contact Us -->
+<!-- The Planning Inspectorate welcome feedback on our statistical products. If you have any comments or questions about this publication or about our statistics in general, you can contact us as follows: -->
+
+<!-- Media enquiries 0303 444 5004 email press.office@planninginspectorate.gov.uk -->
+
+<!-- Public enquiries email statistics@planninginspectorate.gov.uk -->
+
+<!-- Please note we are currently reviewing our statistics with a view to making them as clear and helpful as possible for users. We would be delighted if you could contact us via the address below with any views on this approach; particularly on what content would be most useful and why. -->
+
+<!-- email statistics@planninginspectorate.gov.uk -->
+
+<!-- If you require information which is not available within this or other available publications, you may wish to submit a Request for Information under the Freedom of Information Act 2000 to the Planning Inspectorate. -->
+
+<!-- Back to top -->
+<!-- Is this page useful? -->
+<!-- Yesthis page is useful Nothis page is not useful	Report a problem with this page -->
+<!-- Topics -->
+<!-- Benefits Births, death, marriages and care Business and self-employed Childcare and parenting Citizenship and living in the UK Crime, justice and the law Disabled people Driving and transport Education and learning Employing people Environment and countryside Housing and local services Money and tax Passports, travel and living abroad Visas and immigration Working, jobs and pensions -->
+<!-- Government activity -->
+<!-- Departments News Guidance and regulation Research and statistics Policy papers and consultations Transparency How government works Get involved -->
+<!-- Support links -->
+<!-- Help Privacy Cookies Accessibility statement Contact Terms and conditions Rhestr o Wasanaethau Cymraeg Government Digital Service -->
+<!--  All content is available under the Open Government Licence v3.0, except where otherwise stated -->
+<!-- © Crown copyright -->
